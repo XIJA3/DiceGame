@@ -146,9 +146,9 @@ namespace Game.Services
         }
 
         // Registers an action to be called when the OnlinePlayers event occurs
-        public async Task<IDisposable> RegisterOnOnlinePlayers(Action<List<OnlinePlayer>> action)
+        public async Task<IDisposable> RegisterOnOnlinePlayers(Action<List<int>> action)
         {
-            return HubConnection.On(nameof(IApplicationClient.OnlinePlayers), action);
+            return HubConnection.On(nameof(IApplicationClient.OnlinePlayerCount), action);
         }
     }
 }

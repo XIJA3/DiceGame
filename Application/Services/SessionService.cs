@@ -276,11 +276,6 @@ namespace ApplicationTemplate.Server.Services
             return Task.FromResult(session);
         }
 
-        public Task<GameSession?> GetSessionAsync(long sessionId)
-        {
-            _sessions.TryGetValue(sessionId, out var session);
-            return Task.FromResult(session);
-        }
 
         public async Task ProcessTurnAsync(long sessionId, long sessionPlayId, IUser user, DiceSetTypes diceSetType)
         {
