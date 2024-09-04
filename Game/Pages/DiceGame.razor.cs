@@ -132,8 +132,6 @@ namespace Game.Pages
         // Logs out the user and navigates to the login page
         protected async Task LogOut()
         {
-            //await _gameHub.DisconnectFromHubAsync();
-
             await _authService.LogoutAsync();
 
             _navManager.NavigateTo("/login");
