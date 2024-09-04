@@ -1,0 +1,47 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5">Rules of the Game</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudList T="string">
+            <MudListItem>
+                <MudText Typo="Typo.body1">Each player has 2 sets of dice:</MudText>
+            </MudListItem>
+            <MudList>
+                <MudListItem>
+                    <MudText Typo="Typo.body2">1. The first set has 3 normal dice, with general rolling rules.</MudText>
+                </MudListItem>
+                <MudListItem>
+                    <MudText Typo="Typo.body2">2. The second set has 1 special dice:</MudText>
+                    <MudList>
+                        <MudListItem>
+                            <MudText Typo="Typo.body2">- “X” value on one side (immediately loses the entire game).</MudText>
+                        </MudListItem>
+                        <MudListItem>
+                            <MudText Typo="Typo.body2">- “24” value on another side.</MudText>
+                        </MudListItem>
+                    </MudList>
+                </MudListItem>
+            </MudList>
+            <MudListItem>
+                <MudText Typo="Typo.body1">Each turn, players can roll only 1 of their dice sets, and the resulting score is the total sum of their roll.</MudText>
+            </MudListItem>
+        </MudList>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+}

@@ -1,0 +1,32 @@
+﻿@page "/leaderboard"
+@using DataTransferModels.DTO
+@inject ILeaderboardServiceClient LeaderboardServiceClient
+
+<PageTitle>Leaderboards</PageTitle>
+
+ 
+<MudDataGrid T="UserLeaderboardDto" Items="@topPlayersByScore" Height="70vh" SortMode="SortMode.Multiple">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Top Players By Score</MudText>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.UserId" />
+        <PropertyColumn Property="x => x.UserName" />
+        <PropertyColumn Property="x => x.TotalScore" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="UserLeaderboardDto" />
+    </PagerContent>
+</MudDataGrid>
+
+
+@code {
+    private List<UserLeaderboardDto>? topPlayersByScore;
+
+    private int activeIndex = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        topPlayersByScore = await LeaderboardServiceClient.GetTopPlayersByScoreAsync();
+    }
+}

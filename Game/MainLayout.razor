@@ -1,0 +1,37 @@
+﻿@using MudBlazor
+
+@inherits LayoutComponentBase
+@inject IAuthService _authService;
+@inject IDialogService DialogService
+@inject ISnackbar SnackBar
+@inject NavigationManager NavManager;
+
+@* Required *@
+<MudThemeProvider />
+<MudPopoverProvider />
+@* Needed for dialogs *@
+<MudDialogProvider />
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+
+<MudLayout>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-6 pt-6">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // NavManager.NavigateTo("/Login");
+
+        if (!await _authService.IsAuthorized())
+            NavManager.NavigateTo("/Login");
+        else
+            NavManager.NavigateTo("/diceGame");
+    }
+}

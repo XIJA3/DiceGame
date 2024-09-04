@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  gameservice:
+    image: ${DOCKER_REGISTRY-}gameservice
+    build:
+      context: .
+      dockerfile: GameService\Dockerfile
+
+  clientapp:
+    image: ${DOCKER_REGISTRY-}clientapp
+    build:
+      context: .
+      dockerfile: ClientApp\Dockerfile
+

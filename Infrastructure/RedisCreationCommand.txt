@@ -1,0 +1,11 @@
+commands for powershell
+
+
+1) create redis isntance on docker container
+	docker run --name game-template -p 6379:6379 -d redis
+
+2) Stop docker instance
+	docker stop {Container Id} (you can also write initials here)
+
+3) Remove docker instance
+	docker rm {Container Id} (you can also write initials here)

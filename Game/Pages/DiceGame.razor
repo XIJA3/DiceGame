@@ -1,0 +1,110 @@
+﻿@page "/diceGame"
+@using Enums.Enums
+@inherits MainPage
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex justify-center align-center" Style="height: 70vh;">
+    <MudPaper Elevation="4" Class="pa-6 text-center" Style="border-radius: 16px;">
+        @* Header or Title *@
+        @* <MudText Typo="Typo.h4" Color="Color.Primary" Class="mb-4">Dice Game</MudText> *@
+
+        @* Game States Handling *@
+        @if (State == GameState.Connecting)
+        {
+            <MudText Typo="Typo.body1" Color="Color.Dark">Connecting...</MudText>
+        }
+        else if (State == GameState.Idle)
+        {
+            <MudText Typo="Typo.body1" Color="Color.Dark">Online Players: @OnlinePlayerCount</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="JoinRoom" Class="mt-4">
+                Play
+            </MudButton>
+
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="NavigateToLeaderboard" Class="mt-4">
+                Leaderboard
+            </MudButton>
+
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="LogOut" Class="mt-4">
+                Log Out
+            </MudButton>
+        }
+        else if (State == GameState.SearchingOpponent || State == GameState.WaitingRematch)
+        {
+            <MudText Typo="Typo.body1" Color="Color.Info">
+                @(State == GameState.SearchingOpponent ? "Searching for an opponent..." : "Waiting for an opponent for a rematch...")
+            </MudText>
+            <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="mt-2" />
+        }
+        else if (State == GameState.JoinedInTheRoom)
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Ready" Class="mt-4">
+                @(YourRoomStatus == PlayerRoomStatus.Ready ? "Cancel Ready" : "Ready")
+            </MudButton>
+        }
+        else if (State == GameState.StartedMatchmaking || State == GameState.InProgress)
+        {
+            <MudText Typo="Typo.body1" Color="Color.Dark">Your Score: @YourTotalScore</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Dark">@OpponentsName's Score: @OpponentsTotalScore</MudText>
+            <MudDivider></MudDivider>
+            <MudText Typo="Typo.body1" Color="Color.Dark">Your Remain Play: @YourRemainingPlayCount</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Dark">Opponent's Remain Play: @OpponentsRemainingPlayCount</MudText>
+
+            <MudText Typo="Typo.subtitle1" Color="Color.Primary" Class="mt-4">
+                @(IsYourTurn ? "It's your turn!" : "Waiting for opponent's turn...")
+            </MudText>
+
+            @if (State == GameState.InProgress)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Info" Class="mt-2">Dice Result: @CurrentDiceResult</MudText>
+            }
+
+            @if (IsYourTurn)
+            {
+                <MudGrid Spacing="2" Class="mt-4">
+                    <MudItem xs="12" sm="6">
+                        <MudTooltip Text="Set of 3 normal dice with general rolling rules">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => RollDice(DiceSetTypes.Normal3Dice)" FullWidth="true">
+                                3 Normal Dice
+                            </MudButton>
+                        </MudTooltip>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudTooltip Text="Special dice with a 'X' value that loses the game and '24' for an extra high score">
+                            <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="() => RollDice(DiceSetTypes.XAnd24Dice)" FullWidth="true">
+                                1 Special Dice
+                            </MudButton>
+                        </MudTooltip>
+                    </MudItem>
+                </MudGrid>
+            }
+        }
+        else if (State == GameState.GameOver)
+        {
+            <MudText Typo="Typo.h4" Color="Color.Warning" Class="mt-4">You @YourResult!</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Dark">Your Score: @YourTotalScore</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Dark">Opponent's Score: @OpponentsTotalScore</MudText>
+
+            @if (!OpponentDisconnected)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Rematch" Class="mt-4">
+                    @(YourRoomStatus == PlayerRoomStatus.Ready ? "Cancel" : "Start") Rematch
+                </MudButton>
+            }
+        }
+
+        @if (State != GameState.Connecting && State != GameState.Idle)
+        {
+            <MudDivider Class="mt-4" />
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="Leave" Class="mt-4">
+                Leave Room
+            </MudButton>
+
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OpenGameRulesDialog" Class="mt-4">
+                Rules
+            </MudButton>
+        }
+
+    </MudPaper>
+</MudContainer>

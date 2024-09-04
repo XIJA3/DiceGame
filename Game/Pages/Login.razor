@@ -1,0 +1,119 @@
+﻿@page "/Login"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using MudBlazor
+
+@inject ISnackbar Sb;
+@inject NavigationManager NavManager;
+@inject IAuthService _authService;
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #32333dff;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 65vh;
+        }
+
+        .login-form {
+            background-color: #7e57c2ff;
+            border-radius: 10px;
+            box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+
+        .login-input {
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 15px;
+            width: 100%;
+            font-size: 14px;
+            color: #7B1FA2;
+        }
+
+        .login-button {
+            background-color: #7B1FA2;
+            border: none;
+            padding: 12px 0;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            width: 100%;
+        }
+
+            .login-button:hover {
+                background-color: #5B146E;
+            }
+
+        /* ... other styles ... */
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <EditForm Model="@model" OnValidSubmit="LogInAsync">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="Name">Username</label>
+                    <InputText @bind-Value="model.Username" class="login-input" autocomplete="username" aria-required="true" />
+                    <ValidationMessage For="() => model.Username" />
+                </div>
+                <button type="submit" class="login-button">Log in</button>
+            </EditForm>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+@code {
+    public class LoginInfo
+    {
+        [Required(ErrorMessage = "Username is required")]
+        [DataType(DataType.Text)]
+        public string? Username { get; set; }
+    }
+
+    public LoginInfo model = new();
+
+    async Task LogInAsync()
+    {
+        if (string.IsNullOrWhiteSpace(model.Username))
+            return;
+
+        var loggedIn = await _authService.LoginAsync(model.Username);
+
+        StateHasChanged();
+
+        if (loggedIn)
+            NavManager.NavigateTo("/diceGame");
+        else
+            Sb.Add("Error", Severity.Error);
+    }
+}

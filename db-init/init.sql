@@ -1,0 +1,7 @@
+CREATE DATABASE YourDatabase;
+
+USE YourDatabase;
+
+CREATE LOGIN YourUser WITH PASSWORD = 'SQL0102';
+CREATE USER YourUser FOR LOGIN YourUser;
+ALTER ROLE db_owner ADD MEMBER YourUser;

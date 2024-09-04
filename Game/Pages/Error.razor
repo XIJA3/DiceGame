@@ -1,0 +1,32 @@
+﻿@page "/error"
+@inject NavigationManager Navigation
+@inject Microsoft.AspNetCore.Components.NavigationManager UriHelper
+@using MudBlazor
+
+<MudPaper Class="pa-6 max-width-500 mx-auto mt-12" Elevation="6">
+    <MudText Typo="Typo.h4" Align="Align.Center" Color="Color.Error">Something went wrong!</MudText>
+    <MudDivider Class="my-4" />
+    <MudText Typo="Typo.body1" Align="Align.Center">@ErrorMessage</MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-6 mx-auto" OnClick="GoToLogin">
+        Go to login
+    </MudButton>
+</MudPaper>
+
+@code {
+    public string ErrorMessage { get; set; } = "An unexpected error occurred.";
+
+    protected override void OnInitialized()
+    {
+        var uri = new Uri(UriHelper.Uri);
+        var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        if (queryParams.TryGetValue("message", out var queryMessage))
+        {
+            ErrorMessage = queryMessage.ToString();
+        }
+    }
+
+    private void GoToLogin()
+    {
+        Navigation.NavigateTo("/login", true);
+    }
+}
