@@ -27,11 +27,11 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        // NavManager.NavigateTo("/Login");
+        NavManager.NavigateTo("/Login");
 
-        if (!await _authService.IsAuthorized())
-            NavManager.NavigateTo("/Login");
-        else
-            NavManager.NavigateTo("/diceGame");
+        // if (!await _authService.IsAuthorized())
+        //     NavManager.NavigateTo("/Login");
+        // else
+        //     NavManager.NavigateTo("/diceGame");
     }
 }
